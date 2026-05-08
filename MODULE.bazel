@@ -3,10 +3,4 @@ module(
     version = "0.1.0",
 )
 
-bazel_dep(name = "rules_php")
-
-git_override(
-    module_name = "rules_php",
-    remote = "https://github.com/greggdonovan/rules_php",
-    commit = "031e73c02e0d8bfcd06c6e4086cdfc7f3a3061a8",
-)
+bazel_dep(name = "rules_oci", version = "2.2.6")

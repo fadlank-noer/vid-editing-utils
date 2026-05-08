@@ -1,14 +1,5 @@
-load("@rules_php//php:php.bzl", "php_binary", "php_library")
+load("//rules_custom/rules_client:php.bzl", "php_version")
 
-php_library(
-    name = "vendor",
-    srcs = glob(["vendor/**/*.php"]),
-    visibility = ["//client:__subpackages__"],
-)
-
-php_binary(
-    name = "app",
-    srcs = glob(["src/**/*.php"]) + glob(["vendor/**/*.php"]),
-    main = "src/index.php",
-    visibility = ["//:__subpackages__"],
+php_version(
+    name = "php_version",
 )

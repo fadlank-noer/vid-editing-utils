@@ -3,6 +3,7 @@
 - Keep `README.md` up to date — update it whenever a new feature is added.
 - When the user adds a feature instruction under a `feature -> <name>` heading in this file, read and implement it directly.
 - Follow conventional commit messages (e.g., `feat:`, `fix:`, `refactor:`).
+- Always read the `.claude/` directory to find documented skills and references relevant to the current task.
 
 ## Tech Stack
 
