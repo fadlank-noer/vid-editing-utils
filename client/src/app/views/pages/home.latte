@@ -1,0 +1,11 @@
+{extends '../layout.latte'}
+
+{import '../ui/button.latte'}
+
+{block content}
+    <section class="hero">
+        <h1>Welcome to Video Editor Utils</h1>
+        <p>A collection of utilities for video editing workflows.</p>
+        {include button-primary, text: 'Get Started', url: '/'}
+    </section>
+{/block}

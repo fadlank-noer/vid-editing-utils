@@ -65,3 +65,53 @@ docker_run = rule(
     },
     doc = "Runs a Docker container. Set DOCKER_PATH via --action_env in .bazelrc.",
 )
+
+def _docker_reload_impl(ctx):
+    output = ctx.actions.declare_file(ctx.label.name + ".txt")
+    bat = ctx.actions.declare_file(ctx.label.name + ".bat")
+    dockerfile = ctx.file.dockerfile
+    tag = ctx.attr.tag
+    container_name = ctx.attr.container_name
+    docker_path = ctx.configuration.default_shell_env.get("DOCKER_PATH", "docker")
+    all_inputs = [dockerfile] + ctx.files.srcs
+
+    run_flags = ' --name ' + container_name
+    if ctx.attr.detach:
+        run_flags += " -d"
+    if ctx.attr.rm:
+        run_flags += " --rm"
+    for port in ctx.attr.ports:
+        run_flags += " -p " + port
+
+    ctx.actions.write(
+        output = bat,
+        content = (
+            '"%DOCKER_PATH%" stop ' + container_name + ' 2>nul & ' +
+            '"%DOCKER_PATH%" rm -f ' + container_name + ' 2>nul & ' +
+            '"%DOCKER_PATH%" build --no-cache -t ' + tag + ' -f "' + dockerfile.path + '" "' + dockerfile.dirname + '" && ' +
+            '"%DOCKER_PATH%" run' + run_flags + ' ' + tag + ' > %1'
+        ),
+        is_executable = True,
+    )
+    ctx.actions.run(
+        executable = bat,
+        arguments = [output.path],
+        outputs = [output],
+        inputs = all_inputs,
+        env = {"DOCKER_PATH": docker_path},
+    )
+    return [DefaultInfo(files = depset([output]))]
+
+docker_reload = rule(
+    implementation = _docker_reload_impl,
+    attrs = {
+        "dockerfile": attr.label(mandatory = True, allow_single_file = True),
+        "srcs": attr.label_list(allow_files = True),
+        "tag": attr.string(mandatory = True),
+        "container_name": attr.string(mandatory = True),
+        "ports": attr.string_list(default = []),
+        "detach": attr.bool(default = True),
+        "rm": attr.bool(default = True),
+    },
+    doc = "Stops and removes the existing container, force-rebuilds the image, and runs a fresh container. Set DOCKER_PATH via --action_env in .bazelrc.",
+)
