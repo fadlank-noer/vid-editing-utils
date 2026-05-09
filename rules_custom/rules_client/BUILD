@@ -1,1 +1,1 @@
-exports_files(["php.bzl"])
+exports_files(["php.bzl", "container.bzl"])

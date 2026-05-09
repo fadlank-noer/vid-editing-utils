@@ -20,6 +20,10 @@
 - **Skeleton:** `composer create-project flightphp/skeleton my-project/`
 
 ### Build System — Bazel Monorepo
-- **Tool:** [Bazel](https://bazel.build/) — Scalable build and test system for multi-language, multi-platform codebases.
+- **Tool:** [Bazel](https://bazel.build/) 9.1 — Scalable build and test system for multi-language, multi-platform codebases.
 - **Structure:** Monorepo — all services and packages in a single repository.
 - **Features:** Incremental builds, advanced caching, parallel execution, multi-language support (Go, PHP, etc.).
+
+### Client — PHP
+- **Runtime:** PHP 8.5.6 (ZTS, Alpine 3.22)
+- **Base image:** `php:8.5.6-zts-alpine3.22`
