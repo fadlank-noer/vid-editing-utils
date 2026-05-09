@@ -1,0 +1,12 @@
+{
+  "name": "video-editor-client",
+  "private": true,
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i src/assets/css/input.css -o src/assets/css/style.css --watch",
+    "build": "npx @tailwindcss/cli -i src/assets/css/input.css -o src/assets/css/style.css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4",
+    "tailwindcss": "^4"
+  }
+}

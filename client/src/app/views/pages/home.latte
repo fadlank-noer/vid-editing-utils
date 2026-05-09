@@ -3,9 +3,11 @@
 {import '../ui/button.latte'}
 
 {block content}
-    <section class="hero">
-        <h1>Welcome to Video Editor Utils</h1>
-        <p>A collection of utilities for video editing workflows.</p>
-        {include button-primary, text: 'Get Started', url: '/'}
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Welcome to Video Editor Utils</h1>
+        <p class="mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto">A collection of utilities for video editing workflows.</p>
+        <div class="mt-10">
+            {include button-primary, text: 'Get Started', url: '/'}
+        </div>
     </section>
 {/block}

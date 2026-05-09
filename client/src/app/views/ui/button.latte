@@ -1,7 +1,7 @@
 {define button-primary, string $text, string $url}
-    <a href="{$url}" class="btn btn-primary">{$text}</a>
+    <a href="{$url}" class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark transition-colors">{$text}</a>
 {/define}
 
 {define button-secondary, string $text, string $url}
-    <a href="{$url}" class="btn btn-secondary">{$text}</a>
+    <a href="{$url}" class="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors">{$text}</a>
 {/define}

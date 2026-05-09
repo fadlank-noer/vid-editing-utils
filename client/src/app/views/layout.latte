@@ -6,21 +6,21 @@
     <title>{$title ? $title . ' - '}Video Editor Utils</title>
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
-    <header>
-        <nav>
-            <a href="/" class="logo">Video Editor Utils</a>
-            <ul>
-                <li><a href="/">Home</a></li>
+<body class="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+            <a href="/" class="text-xl font-bold text-primary">Video Editor Utils</a>
+            <ul class="flex space-x-6">
+                <li><a href="/" class="text-gray-600 hover:text-gray-900">Home</a></li>
             </ul>
         </nav>
     </header>
 
-    <main id="content">
+    <main id="content" class="flex-1">
         {block content}{/block}
     </main>
 
-    <footer>
+    <footer class="bg-white border-t border-gray-200 py-6 text-center text-gray-500 text-sm">
         <p>&copy; Copyright {date('Y')} Video Editor Utils</p>
     </footer>
 </body>
