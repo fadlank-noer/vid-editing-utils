@@ -1,0 +1,5 @@
+# PHP executable path — adjust to your local installation
+build --action_env=PHP_PATH=""
+
+# Docker executable path (Rancher Desktop)
+build --action_env=DOCKER_PATH=""

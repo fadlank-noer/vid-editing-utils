@@ -1,11 +1,49 @@
-def _docker_pull_impl(ctx):
+def _docker_build_impl(ctx):
     output = ctx.actions.declare_file(ctx.label.name + ".txt")
     bat = ctx.actions.declare_file(ctx.label.name + ".bat")
-    image_ref = ctx.attr.image + ":" + ctx.attr.tag
+    dockerfile = ctx.file.dockerfile
+    tag = ctx.attr.tag
     docker_path = ctx.configuration.default_shell_env.get("DOCKER_PATH", "docker")
+    all_inputs = [dockerfile] + ctx.files.srcs
     ctx.actions.write(
         output = bat,
-        content = '"%DOCKER_PATH%" pull ' + image_ref + ' --platform ' + ctx.attr.platform + ' && "%DOCKER_PATH%" images --format {{.Repository}}:{{.Tag}} {{.ID}} ' + image_ref + ' > %1',
+        content = '"%DOCKER_PATH%" build -t ' + tag + ' -f "' + dockerfile.path + '" "' + dockerfile.dirname + '" && "%DOCKER_PATH%" images --format {{.Repository}}:{{.Tag}} {{.ID}} ' + tag + ' > %1',
+        is_executable = True,
+    )
+    ctx.actions.run(
+        executable = bat,
+        arguments = [output.path],
+        outputs = [output],
+        inputs = all_inputs,
+        env = {"DOCKER_PATH": docker_path},
+    )
+    return [DefaultInfo(files = depset([output]))]
+
+docker_build = rule(
+    implementation = _docker_build_impl,
+    attrs = {
+        "dockerfile": attr.label(mandatory = True, allow_single_file = True),
+        "srcs": attr.label_list(allow_files = True),
+        "tag": attr.string(mandatory = True),
+    },
+    doc = "Builds a Docker image from a Dockerfile. Set DOCKER_PATH via --action_env in .bazelrc.",
+)
+
+def _docker_run_impl(ctx):
+    output = ctx.actions.declare_file(ctx.label.name + ".txt")
+    bat = ctx.actions.declare_file(ctx.label.name + ".bat")
+    image = ctx.attr.image
+    docker_path = ctx.configuration.default_shell_env.get("DOCKER_PATH", "docker")
+    flags = ""
+    if ctx.attr.detach:
+        flags += " -d"
+    if ctx.attr.rm:
+        flags += " --rm"
+    for port in ctx.attr.ports:
+        flags += " -p " + port
+    ctx.actions.write(
+        output = bat,
+        content = '"%DOCKER_PATH%" run' + flags + " " + image + " > %1",
         is_executable = True,
     )
     ctx.actions.run(
@@ -17,12 +55,13 @@ def _docker_pull_impl(ctx):
     )
     return [DefaultInfo(files = depset([output]))]
 
-docker_pull = rule(
-    implementation = _docker_pull_impl,
+docker_run = rule(
+    implementation = _docker_run_impl,
     attrs = {
         "image": attr.string(mandatory = True),
-        "tag": attr.string(default = "latest"),
-        "platform": attr.string(default = "linux/amd64"),
+        "ports": attr.string_list(default = []),
+        "detach": attr.bool(default = True),
+        "rm": attr.bool(default = True),
     },
-    doc = "Pulls a Docker image via `docker pull`. Set DOCKER_PATH via --action_env in .bazelrc.",
+    doc = "Runs a Docker container. Set DOCKER_PATH via --action_env in .bazelrc.",
 )
